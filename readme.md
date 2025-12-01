@@ -44,7 +44,7 @@ source install/setup.bash
 すべてのターミナルで
 ```
 source install/setup.bash
-source /opt/ros/jazzy/setup/bash
+source /opt/ros/jazzy/setup.bash
 ```
 
 仮想環境を使う場合は 
@@ -106,3 +106,4 @@ rqt_graph
 ```
 ROS2 run rviz2 rviz2
 ```
+
