@@ -73,7 +73,7 @@ ros2 run smartcart_pkg shopping_navigator
 ユーザーが操作する画面（買い物リスト表示）を起動します。
 ```
 # GUIアプリの起動
-python3 src/smartcart_pkg/smartcart_pkg/app.py
+streamlit run src/smartcart_pkg/smartcart_pkg/app.py
 ```
 
 ### 【Terminal 4】商品スキャナー (Scanner)
@@ -106,4 +106,5 @@ rqt_graph
 ```
 ROS2 run rviz2 rviz2
 ```
+
 
