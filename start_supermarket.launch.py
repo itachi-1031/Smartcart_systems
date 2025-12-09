@@ -1,27 +1,36 @@
 import os
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable, ExecuteProcess
+from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
-    # 1. パス設定
-    world_file = '/home/morio/smartcart_sys/worlds/supermarket.sdf'
-    model_path = '/home/morio/smartcart_sys/models'
-    
-    # TurtleBot3のモデルファイルの場所 (ROS 2 Jazzyの標準パス)
-    # ※もしエラーになる場合は、ここを実際のパスに合わせて調整します
-    tb3_model_path = '/opt/ros/jazzy/share/turtlebot3_gazebo/models/turtlebot3_burger/model.sdf'
+    # ★重要: あなたのパッケージ名に合わせてください
+    package_name = 'smartcart_sys2' 
 
+    # 1. パス設定 (ここを自動取得に変更)
+    # 自分のパッケージのインストール場所を取得
+    pkg_share = get_package_share_directory(package_name)
+    
+    # TurtleBot3のパッケージ場所を取得 (標準パスに依存しない安全な方法)
+    pkg_tb3_gazebo = get_package_share_directory('turtlebot3_gazebo')
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
+
+    # ファイルパスの結合
+    world_file = os.path.join(pkg_share, 'worlds', 'supermarket.sdf')
+    my_model_path = os.path.join(pkg_share, 'models')
+    
+    # TurtleBot3のモデルパス
+    tb3_model_path = os.path.join(pkg_tb3_gazebo, 'models', 'turtlebot3_burger', 'model.sdf')
+    tb3_models_dir = os.path.join(pkg_tb3_gazebo, 'models')
 
     return LaunchDescription([
         # 2. 環境変数の設定
-        # 自作モデルと、TurtleBot3のモデル(標準)の両方をパスに含める
+        # 自作モデルパスと、TurtleBot3のモデルパスを結合
         SetEnvironmentVariable(
             name='GZ_SIM_RESOURCE_PATH',
-            value=f"{model_path}:/opt/ros/jazzy/share/turtlebot3_gazebo/models"
+            value=f"{my_model_path}:{tb3_models_dir}"
         ),
 
         # 3. Gazeboの起動
@@ -32,8 +41,7 @@ def generate_launch_description():
             launch_arguments={'gz_args': f'-r {world_file}'}.items(),
         ),
 
-        # 4. TurtleBot3を出現させる (ここを修正しました！)
-        # 'create' ノードを使って、新しいGazeboにロボットを登場させます
+        # 4. TurtleBot3を出現させる
         Node(
             package='ros_gz_sim',
             executable='create',
@@ -42,7 +50,7 @@ def generate_launch_description():
                 '-file', tb3_model_path,
                 '-x', '-15.0',
                 '-y', '0.0',
-                '-z', '0.3' # 少し浮かせて埋まり防止
+                '-z', '0.3'
             ],
             output='screen',
         ),
