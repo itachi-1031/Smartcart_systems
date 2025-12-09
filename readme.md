@@ -1,110 +1,45 @@
-# Smart Cart Project (Shopping Support Robot)
+SmartCartAI Interface 
+Ubuntu 24.04 + ROS 2 Jazzy 環境で動作する、スーパーマーケット向けスマートカートのユーザーインターフェースです。 Google Gemini APIを活用した「献立相談チャット」機能を持ち、決定した買い物リストをJSON形式でROS 2トピックとして配信します。
 
-## 概要
-スーパーマーケットでの買い物支援を行うスマートカートロボットの制御システムです。
-ROS 2 Jazzy と TurtleBot3 シミュレーション環境を使用し、タブレットアプリ（Python）と連携して自律移動・商品スキャンを行います。
+**機能概要**
+AIシェフ機能: Google Gemini と対話し、献立やレシピを相談できます。
+買い物リスト生成: 会話から必要な食材を抽出し、JSONデータに変換します。
+ROS 2連携: ボタン一つでロボットの自律移動システムへ指令（商品リスト）を送信します。
 
-## 動作環境
-* **OS:** Ubuntu 24.04 LTS
-* **ROS Version:** ROS 2 Jazzy Jalisco
-* **Simulator:** Gazebo (Harmonic) + TurtleBot3
-* **Language:** Python 3.12
+**動作環境**
+OS: Ubuntu 24.04 LTS (Noble Numbat)
+ROS Distro: ROS 2 Jazzy jazzy
+Python: 3.12
+Hardware: PC (Simulation) / i-Cart mini (Real Robot)
 
-## ディレクトリ構成
-```text
-smartcart_submission_new/
-├── src/
-│   └── smartcart_pkg/  (ROS 2 Package)
-├── requirements.txt
-└── README.md
-```
+**setup手順**
 
-## セットアップ方法
-1. 依存関係のインストール
+1,必要ツールのインストール
+sudo apt update
+sudo apt install python3-venv
 
-仮想環境の作成（推奨）
+2,プロジェクトの準備
+mkdir smart_cart_project
+cd smart_cart_project
+#このディレクトリ内にapp.pyを配置
 
-python3 -m venv .venv
-source .venv/bin/activate
+3,仮想環境の作成
+python3 -m venv --system-site-packages venv
 
-## 必要なライブラリのインストール
-```
-pip install -r requirements.txt
-```
-2. ビルド
-```
+4,仮想環境のアクティベートとライブラリ導入
+source venv/bin/activate
+pip install streamlit google-generativeai python-dotenv
+
+5,APIkeyの設定
+nano .env
+GOOGLE_API_KEY=YOUR_API_KEY_HERE
+
+**実行手順**
+# 1. ROS 2 環境の読み込み
 source /opt/ros/jazzy/setup.bash
-colcon build --symlink-install
-source install/setup.bash
-```
 
-### 実行手順（マルチターミナル構成）
-### 本システムは複数のノードが連携して動作します。 以下の順序で、それぞれ新しいターミナルを開いて実行してください。
+# 2. 仮想環境のアクティベート
+source venv/bin/activate
 
-すべてのターミナルで
-```
-source install/setup.bash
-source /opt/ros/jazzy/setup.bash
-```
-
-仮想環境を使う場合は 
-```
-source .venv/bin/activate
-```
-を実行してからコマンドを打ってください。
-
-
-### 【Terminal 1】シミュレーション環境 (Gazebo)
-スーパーマーケットのワールドを展開し、ロボットを出現させます。
-
-```
-export TURTLEBOT3_MODEL=burger
-ros2 launch smartcart_pkg start_supermarket.launch.py
-```
-
-### 【Terminal 2】ナビゲーション制御 (Navigator)
-ロボットの移動ロジックを司るメインノードです。
-```
-ros2 run smartcart_pkg shopping_navigator
-# または簡易版: ros2 run smartcart_pkg simple_navigator
-```
-
-### 【Terminal 3】タブレット・ユーザーインターフェース (App)
-ユーザーが操作する画面（買い物リスト表示）を起動します。
-```
-# GUIアプリの起動
-streamlit run src/smartcart_pkg/smartcart_pkg/app.py
-```
-
-### 【Terminal 4】商品スキャナー (Scanner)
-バーコード読み取り（カートへの商品投入）をシミュレーションします。
-```
-ros2 run smartcart_pkg cart_scanner
-```
-
-### 【Terminal 5】速度変換・制御 (Converter)
-※必要な場合のみ実行（アプリからの指令をロボットの速度指令に変換など）
-```
-python3 src/smartcart_pkg/smartcart_pkg/vel_converter.py
-```
-
-### 【Terminal 6】デバッグ用：トピック監視 (Topic Echo)
-ロボットの状態やセンサー値を確認します。
-```
-ros2 topic echo /scan
-# または: ros2 topic echo /cmd_vel
-```
-
-### 【Terminal 7】デバッグ用：通信グラフ確認 (RQT Graph)
-ノード間の接続関係を可視化します。
-```
-rqt_graph
-```
-### 【Terminal 8】その他ツール (RViz2 など)
-地図やセンサー情報を可視化します（Launchに含まれていない場合）。
-
-```
-ROS2 run rviz2 rviz2
-```
-
-
+# 3. アプリの起動
+streamlit run app.py
