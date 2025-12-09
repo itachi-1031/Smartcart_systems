@@ -12,8 +12,8 @@
 
 ターミナル1
 ```
-    source /opt/ros/jazzy/setup.bash
-    ros2 launch ~/smartcart_sys/smartcart_sys/bringup_all.launch.py
+source /opt/ros/jazzy/setup.bash
+ros2 launch ~/smartcart_sys/smartcart_sys/bringup_all.launch.py
 ```
 
 ターミナル2
@@ -28,4 +28,3 @@
 
     source /opt/ros/jazzy/setup.bash
     python3 ~/smartcart_sys/simple_navigator.py
-    '''
