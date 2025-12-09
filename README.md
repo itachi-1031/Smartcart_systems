@@ -21,7 +21,6 @@ ros2 launch ~/smartcart_sys/smartcart_sys/bringup_all.launch.py
     source .venv/bin/activate   #仮想環境を起動する
     source /opt/ros/jazzy/setup.bash
     streamlit run app.py
-'''
 
 ターミナル3
 '''
