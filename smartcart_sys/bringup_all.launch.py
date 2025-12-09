@@ -7,15 +7,26 @@ from launch.substitutions import LaunchConfiguration, Command
 from launch_ros.actions import Node
 
 def generate_launch_description():
+    # ★重要: パッケージ名を定義
+    package_name = 'smartcart_sys2'
+    
+    # ★重要: インストールされたパッケージのパスを取
+    pkg_share = get_package_share_directory(package_name)
+
     # ==========================================
-    # 1. パラメータ設定
+    # 1. パラメータ設定 (相対パス化)
     # ==========================================
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     
-    map_dir = '/home/morio/smartcart_sys/maps/supermarket_map.yaml'
-    params_dir = '/home/morio/smartcart_sys/nav2_params.yaml'
+    # マップファイルのパス
+    # maps/supermarket_map.yaml を参照
+    map_dir = os.path.join(pkg_share, 'maps', 'supermarket_map.yaml')
     
-    # TurtleBot3のURDFファイルのパス
+    # パラメータファイルのパス
+    # config/nav2_params.yaml を参照 (※ファイルをconfigフォルダに入れてください！)
+    params_dir = os.path.join(pkg_share, 'config', 'nav2_params.yaml')
+    
+    # TurtleBot3のURDFファイルのパス (これはそのままでOK)
     urdf_path = os.path.join(
         get_package_share_directory('turtlebot3_description'),
         'urdf',
@@ -26,15 +37,14 @@ def generate_launch_description():
     # ==========================================
 
     # A. 世界とロボット (Gazebo)
+    # 修正: 自作の別launchファイルを呼び出すときも pkg_share を使う
     start_gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
-            '/home/morio/smartcart_sys/smartcart_sys/start_supermarket.launch.py'
+            os.path.join(pkg_share, 'launch', 'start_supermarket.launch.py')
         ])
     )
 
     # B. ロボットの体を配信 (Robot State Publisher)
-    # ★修正ポイント：xacroコマンドを使って、変な名前(${namespace})を確実に消去する！
-    # namespace:="" を渡すことで、空文字に置換します。
     robot_desc = Command(['xacro ', urdf_path, ' namespace:=""'])
 
     start_robot_state_publisher = Node(
