@@ -11,13 +11,13 @@
 ## 実行手順
 
 ターミナル1
-'''
+```
     source /opt/ros/jazzy/setup.bash
     ros2 launch ~/smartcart_sys/smartcart_sys/bringup_all.launch.py
-    '''
+```
 
 ターミナル2
-'''
+
     source .venv/bin/activate   #仮想環境を起動する
     source /opt/ros/jazzy/setup.bash
     streamlit run app.py
@@ -25,6 +25,7 @@
 
 ターミナル3
 '''
+
     source /opt/ros/jazzy/setup.bash
     python3 ~/smartcart_sys/simple_navigator.py
     '''
