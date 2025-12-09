@@ -16,7 +16,7 @@ source /opt/ros/jazzy/setup.bash
 ros2 launch ~/smartcart_sys/smartcart_sys/bringup_all.launch.py
 ```
 
-ターミナル2
+ターミナル2   
 
     source .venv/bin/activate   #仮想環境を起動する
     source /opt/ros/jazzy/setup.bash
@@ -25,5 +25,6 @@ ros2 launch ~/smartcart_sys/smartcart_sys/bringup_all.launch.py
 ターミナル3
 '''
 
+    export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:~/smartcart_sys2/models
     source /opt/ros/jazzy/setup.bash
     python3 ~/smartcart_sys/simple_navigator.py
